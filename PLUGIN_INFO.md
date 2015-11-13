@@ -44,7 +44,7 @@ In your blueprint, add a new field and use `autoid` as the field name. This way 
 ```yaml
 fields:
   autoid:
-    type: hidden
+    type: input
     readonly: true
 ```
 
