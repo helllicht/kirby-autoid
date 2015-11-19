@@ -16,13 +16,13 @@ But sometimes this can be very helpful if you need to reference pages to each ot
 
 ### Manually (Copy & Paste)
 
-Add a `fields` folder inside your `site` directory of your kirby installation, if not already existing.
+Add a `plugins` folder inside your `site` directory of your kirby installation, if not already existing.
 
-Then download the zip file and copy all its contents into an `autoid` folder inside the `fields` directory. Your folder structure should now look like this:
+Then download the zip file and copy all its contents into an `autoid` folder inside the `plugins` directory. Your folder structure should now look like this:
 
 ```yaml
 site/
-  plugin/
+  plugins/
     autoid/
       autoid.php
       ...
@@ -34,7 +34,7 @@ Alternatively, you can add the plugin as a git submodule in order to make future
 
 ```bash
 $ cd your/project/directory
-$ git submodule add https://github.com/helllicht/kirby-autoid.git site/fields/autoid
+$ git submodule add https://github.com/helllicht/kirby-autoid.git site/plugins/autoid
 ```
 
 ## Usage
