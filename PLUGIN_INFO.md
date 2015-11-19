@@ -22,7 +22,7 @@ Then download the zip file and copy all its contents into an `autoid` folder ins
 
 ```yaml
 site/
-  fields/
+  plugin/
     autoid/
       autoid.php
       ...
