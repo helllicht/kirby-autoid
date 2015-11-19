@@ -74,7 +74,7 @@ class AutoIdPlugin {
             })->sortBy($fieldName, 'desc');
 
             if ($filteredPages->count() == 0) {
-                $nextId = 0 + $offset;
+                $nextId = 1 + $offset;
             } else {
                 $latestId = intval($filteredPages->first()->{$this->fieldName}()->value());
                 $nextId = $latestId + 1 + $offset;
