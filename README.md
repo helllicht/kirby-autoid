@@ -48,7 +48,7 @@ fields:
     readonly: true
 ```
 
-*Configuration for a read-only, hidden field*
+*Configuration for a read-only field*
 
 Now, the plugin creates a unique id for each new page created, which is stored inside the field. It also works with existing pages, all you need to do is to open the page in the panel and hit save once.
 
