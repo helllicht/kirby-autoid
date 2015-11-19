@@ -35,6 +35,8 @@ class AutoIdPlugin {
     }
 
     public function onPageUpdate($page) {
+        // do nothing! KIRBY 2.2 is deleting fields when using $page->update(array())
+        /*
         if (
             $this->fieldExists($page) &&
             $page->{$this->fieldName}()->isEmpty()
@@ -42,7 +44,7 @@ class AutoIdPlugin {
             $page->update(array(
                 $this->fieldName => $this->getUniqueAutoId()
             ));
-        }
+        }*/
     }
 
     /**
