@@ -3,7 +3,7 @@
  *
  * AutoID Plugin for Kirby 2
  *
- * @version   1.0.1
+ * @version   1.0.2
  * @author    Helllicht medien GmbH <http://helllicht.com>
  * @copyright Helllicht medien GmbH <http://helllicht.com>
  * @link      https://github.com/helllicht/kirby-autoid
