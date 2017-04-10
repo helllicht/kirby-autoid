@@ -86,9 +86,9 @@ This allows you to use `yourcustomfieldname` as the field name for your autoid f
 
 ### Type
 
-If you're working in a larger team, you might run into problems using numeric ids. If more than one teammember creates content in their respective local repositories, pages will end up getting the same ids, which kind of defeats the purpose of this plugin.
+If you're working in a larger team, you might run into problems using numeric ids. If more than one team member creates content in their respective local repositories, pages will end up getting the same ids, which kind of defeats the purpose of this plugin.
 
-So we built in a option to use unique md5 hashes instead. They are based on a microtimestamp + your session id. This way it's (nearly) impossible to generate the same hash again.
+So we added an option to use unique md5 hashes instead. They are based on a microtimestamp + your session id. This way it's (nearly) impossible to generate the same hash again.
 
 ```php
 c::set('autoid.type', 'hash');
