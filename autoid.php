@@ -3,7 +3,7 @@
  *
  * AutoID Plugin for Kirby 2
  *
- * @version   1.0.2
+ * @version   1.1.0
  * @author    Helllicht medien GmbH <http://helllicht.com>
  * @copyright Helllicht medien GmbH <http://helllicht.com>
  * @link      https://github.com/helllicht/kirby-autoid
@@ -27,7 +27,7 @@ class AutoIdPlugin {
     }
 
     public function onPageCreate($page) {
-        if ($this->fieldExists($page)) {
+        if ($page->{$this->fieldName}()->exists()) {
             $page->update(array(
                 $this->fieldName => $this->getUniqueAutoId()
             ));
@@ -36,7 +36,7 @@ class AutoIdPlugin {
 
     public function onPageUpdate($page) {
         if (
-            $this->fieldExists($page) &&
+            $page->{$this->fieldName}()->exists() &&
             $page->{$this->fieldName}()->isEmpty()
         ) {
             $page->update(array(
@@ -49,7 +49,28 @@ class AutoIdPlugin {
      * @return string
      */
     protected function getNewAutoId($offset = 0) {
-        if ($this->fieldType === 'hash') {
+
+        if ($this->fieldType === 'id') {
+
+          // get latest ID, numbers only!
+          $fieldName = $this->fieldName;
+          $filteredPages = site()->pages()->index()->filter(function($p) use ($fieldName) {
+              $val = $p->{$fieldName}()->value();
+
+              return is_numeric($val);
+          })->sortBy($fieldName, 'desc');
+
+          if ($filteredPages->count() == 0) {
+              $nextId = 1 + $offset;
+          } else {
+              $latestId = intval($filteredPages->first()->{$this->fieldName}()->value());
+              $nextId = $latestId + 1 + $offset;
+          }
+
+          return (string) $nextId;
+
+        } else { // defaults to hash
+
             // Get Elements
             $elements[] = microtime();
             $elements[] = session_id();
@@ -62,25 +83,6 @@ class AutoIdPlugin {
             $idHash = md5($idString);
 
             return $idHash;
-
-        } else { // defaults to id
-
-            // get latest ID, numbers only!
-            $fieldName = $this->fieldName;
-            $filteredPages = site()->pages()->index()->filter(function($p) use ($fieldName) {
-                $val = $p->{$fieldName}()->value();
-
-                return is_numeric($val);
-            })->sortBy($fieldName, 'desc');
-
-            if ($filteredPages->count() == 0) {
-                $nextId = 1 + $offset;
-            } else {
-                $latestId = intval($filteredPages->first()->{$this->fieldName}()->value());
-                $nextId = $latestId + 1 + $offset;
-            }
-
-            return (string) $nextId;
         }
     }
 
@@ -106,23 +108,13 @@ class AutoIdPlugin {
         throw new Exception('Fatal Error: Cannot create new id. Tried 10 offsets with no luck.');
     }
 
-    /**
-     * @return bool
-     */
-    protected function fieldExists($page) {
-        // KIRBY is missing an $page->field()->exists() method
-        $contentArray = $page->content()->toArray();
-
-        // Check if field isset
-        return isset($contentArray[$this->fieldName]);
-    }
 }
 
 // Allow to overwrite field name in config.php with c::set('autoid.name', 'NameMyField');
 $fieldName = c::get('autoid.name', 'autoid');
 
-// Allow to overwrite field type to 'hash' instead of 'id' with c::set('autoid.type', 'hash');
-$fieldType = c::get('autoid.type', 'id');
+// Allow to overwrite field type to 'id' instead of 'hash' with c::set('autoid.type', 'id');
+$fieldType = c::get('autoid.type', 'hash');
 
 // create a instance and hook into kirby
 $plugin = new AutoIdPlugin($fieldName, $fieldType);
