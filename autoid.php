@@ -127,9 +127,8 @@ kirby()->hook('panel.page.create', function($page) use ($plugin) {
 // Set id for existing pages (if added later)
 kirby()->hook('panel.page.update', function($page) use ($plugin) {
     // trigger update only with version 2.2.2 or higher
-    $version = intval(str_replace('.', '', panel()->version()));
-    if($version >= 222) {
-        return $plugin->onPageUpdate($page);
+    if(version_compare(panel()->version(), '2.2.2', '>=')) {
+      return $plugin->onPageUpdate($page);
     } else {
         // do nothing, because of a kirby bug: https://github.com/getkirby/panel/issues/667
     }
