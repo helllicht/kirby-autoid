@@ -39,16 +39,15 @@ $ git submodule add https://github.com/helllicht/kirby-autoid.git site/plugins/a
 
 ## Usage
 
-In your blueprint, add a new field and use `autoid` as the field name. This way the plugin knows on which field to act on. The fieldtype is up to you, but we highly recommend to make it read-only.
+In your blueprint, add a new field and use `autoid` as the field name. This way the plugin knows on which field to act on. As field type set `autoid` to use the custom AutoID field which comes with the plugin.
 
 ```yaml
 fields:
   autoid:
-    type: text
-    readonly: true
+    type: autoid
 ```
 
-*Configuration for a read-only field*
+*Recommended Configuration*
 
 Now, the plugin creates a unique id for each new page created, which is stored inside the field. It also works with existing pages, all you need to do is to open the page in the panel and hit save once.
 
@@ -86,9 +85,11 @@ This allows you to use `yourcustomfieldname` as the field name for your autoid f
 
 ### Type
 
-If you're working in a larger team, you might run into problems using numeric ids. If more than one team member creates content in their respective local repositories, pages will end up getting the same ids, which kind of defeats the purpose of this plugin.
+**By default**, AutoID now uses unique **md5 hashes** (microtimestamp + session id) to make sure each ID is unique. **This is our recommended method.**
 
-So we added an option to use unique md5 hashes instead. They are based on a microtimestamp + your session id. This way it's (nearly) impossible to generate the same hash again.
+However, for those of you who don't want unreadable hashes and prefer more readable numeric ids, AutoID offers this method as well. You can set it in your config.
+
+**Please note:** This method is *only* recommended if you're the only contributor to the project. If you're working in a larger team working in parallel in local repositories, you might run into problems using numeric ids as pages will end up getting the same ids.
 
 ```php
 c::set('autoid.type', 'hash');

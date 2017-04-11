@@ -133,3 +133,6 @@ kirby()->hook('panel.page.update', function($page) use ($plugin) {
         // do nothing, because of a kirby bug: https://github.com/getkirby/panel/issues/667
     }
 });
+
+// Register Custom Form Field
+$kirby->set('field', 'autoid', __DIR__ . '/fields/autoid');
