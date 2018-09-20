@@ -10,7 +10,8 @@
  * @license   MIT <http://opensource.org/licenses/MIT>
  */
 
-class AutoIdPlugin {
+class AutoIdPlugin
+{
     /**
      * @var string
      */
@@ -21,12 +22,14 @@ class AutoIdPlugin {
      */
     protected $fieldType;
 
-    public function __construct($fieldName, $fieldType) {
+    public function __construct($fieldName, $fieldType)
+    {
         $this->fieldName = $fieldName;
         $this->fieldType = $fieldType;
     }
 
-    public function onPageCreate($page) {
+    public function onPageCreate($page)
+    {
         if ($page->{$this->fieldName}()->exists()) {
             $page->update(array(
                 $this->fieldName => $this->getUniqueAutoId()
@@ -34,7 +37,8 @@ class AutoIdPlugin {
         }
     }
 
-    public function onPageUpdate($page) {
+    public function onPageUpdate($page)
+    {
         if (
             $page->{$this->fieldName}()->exists() &&
             $page->{$this->fieldName}()->isEmpty()
@@ -48,27 +52,26 @@ class AutoIdPlugin {
     /**
      * @return string
      */
-    protected function getNewAutoId($offset = 0) {
-
+    protected function getNewAutoId($offset = 0)
+    {
         if ($this->fieldType === 'id') {
 
           // get latest ID, numbers only!
-          $fieldName = $this->fieldName;
-          $filteredPages = site()->pages()->index()->filter(function($p) use ($fieldName) {
-              $val = $p->{$fieldName}()->value();
+            $fieldName = $this->fieldName;
+            $filteredPages = site()->pages()->index()->filter(function ($p) use ($fieldName) {
+                $val = $p->{$fieldName}()->value();
 
-              return is_numeric($val);
-          })->sortBy($fieldName, 'desc');
+                return is_numeric($val);
+            })->sortBy($fieldName, 'desc');
 
-          if ($filteredPages->count() == 0) {
-              $nextId = 1 + $offset;
-          } else {
-              $latestId = intval($filteredPages->first()->{$this->fieldName}()->value());
-              $nextId = $latestId + 1 + $offset;
-          }
+            if ($filteredPages->count() == 0) {
+                $nextId = 1 + $offset;
+            } else {
+                $latestId = intval($filteredPages->first()->{$this->fieldName}()->value());
+                $nextId = $latestId + 1 + $offset;
+            }
 
-          return (string) $nextId;
-
+            return (string) $nextId;
         } else { // defaults to hash
 
             // Get Elements
@@ -89,7 +92,8 @@ class AutoIdPlugin {
     /**
      * @return string
      */
-    protected function getUniqueAutoId() {
+    public function getUniqueAutoId()
+    {
         for ($offset = 0; $offset <= 10; $offset++) {
             // Get new Id
             $autoid = $this->getNewAutoId($offset);
@@ -108,6 +112,21 @@ class AutoIdPlugin {
         throw new Exception('Fatal Error: Cannot create new id. Tried 10 offsets with no luck.');
     }
 
+    /**
+     * @return string
+     */
+    public function getFieldName()
+    {
+        return $this->fieldName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldType()
+    {
+        return $this->fieldType;
+    }
 }
 
 // Allow to overwrite field name in config.php with c::set('autoid.name', 'NameMyField');
@@ -120,15 +139,15 @@ $fieldType = c::get('autoid.type', 'hash');
 $plugin = new AutoIdPlugin($fieldName, $fieldType);
 
 // Set id for new pages
-kirby()->hook('panel.page.create', function($page) use ($plugin) {
+kirby()->hook('panel.page.create', function ($page) use ($plugin) {
     return $plugin->onPageCreate($page);
 });
 
 // Set id for existing pages (if added later)
-kirby()->hook('panel.page.update', function($page) use ($plugin) {
+kirby()->hook('panel.page.update', function ($page) use ($plugin) {
     // trigger update only with version 2.2.2 or higher
-    if(version_compare(panel()->version(), '2.2.2', '>=')) {
-      return $plugin->onPageUpdate($page);
+    if (version_compare(panel()->version(), '2.2.2', '>=')) {
+        return $plugin->onPageUpdate($page);
     } else {
         // do nothing, because of a kirby bug: https://github.com/getkirby/panel/issues/667
     }

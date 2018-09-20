@@ -51,7 +51,9 @@ fields:
 
 Now, the plugin creates a unique id for each new page created, which is stored inside the field. It also works with existing pages, all you need to do is to open the page in the panel and hit save once.
 
-### Example Use Case
+### Example Use Cases
+
+#### Default Usage In Your Blueprint
 
 Let's say you want to have a field that allows you to add related projects to a project page. Normally you would query each sibling and reference them by their name/url/uid. But what if they names change? You would need to update each reference individually.
 
@@ -69,7 +71,15 @@ fields:
         text: '{{title}}'
 ```
 
-*Example Blueprint field*
+#### Creating An AutoId In Your Code
+
+Maybe you need to create an autoId within your code itself, for example if you are importing content or you want to create an autoId for existing content. Then you have access to the now public method `getUniqueAutoId()` after instantiating the `AutoIdPlugin`class, too.
+
+```
+$autoId = new AutoIdPlugin('autoid', c::get('autoid.type', 'id'));
+return $autoId->getUniqueAutoId();
+```
+*Example programmatic usage*
 
 ## Options
 
